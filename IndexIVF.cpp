@@ -225,6 +225,195 @@ void IndexIVF::make_direct_map (bool new_maintain_direct_map)
 }
 
 
+void IndexIVF::search_subset (idx_t n, const float *x, idx_t k, const idx_t* indexes, const idx_t* n_indexes,
+                         float *distances, idx_t *labels) const
+{
+    std::unique_ptr<idx_t[]> idx(new idx_t[n * nprobe]);
+    std::unique_ptr<float[]> coarse_dis(new float[n * nprobe]);
+
+    double t0 = getmillisecs();
+    quantizer->search (n, x, nprobe, coarse_dis.get(), idx.get());
+    indexIVF_stats.quantization_time += getmillisecs() - t0;
+
+    t0 = getmillisecs();
+    invlists->prefetch_lists (idx.get(), n * nprobe);
+
+    search_subset_preassigned (n, x, k, indexes, n_indexes, idx.get(), coarse_dis.get(),
+                        distances, labels, false);
+    indexIVF_stats.search_time += getmillisecs() - t0;
+}
+
+
+void IndexIVF::search_subset_preassigned (idx_t n, const float *x, idx_t k, const idx_t* indexes, const idx_t* n_indexes,
+                                   const idx_t *keys,
+                                   const float *coarse_dis ,
+                                   float *distances, idx_t *labels,
+                                   bool store_pairs,
+                                   const IVFSearchParameters *params) const
+{
+    long nprobe = params ? params->nprobe : this->nprobe;
+    long max_codes = params ? params->max_codes : this->max_codes;
+
+    size_t nlistv = 0, ndis = 0, nheap = 0;
+
+    using HeapForIP = CMin<float, idx_t>;
+    using HeapForL2 = CMax<float, idx_t>;
+
+    bool interrupt = false;
+
+    idx_t n_indexes_total = 0;
+    for (size_t j = 0; j < n; j++) {
+        n_indexes_total += n_indexes[j];
+    }
+
+    std::unique_ptr<idx_t[]> indexes_list_no(new idx_t[n_indexes_total]);
+    std::unique_ptr<idx_t[]> indexes_offset(new idx_t[n_indexes_total]);
+    for (size_t j = 0; j < n_indexes_total; j++) {
+        indexes_list_no[j] = direct_map[indexes[j]] >> 32;
+        indexes_offset[j] = direct_map[indexes[j]] & 0xffffffff;
+    }
+
+#pragma omp parallel reduction(+: nlistv, ndis, nheap)
+    {
+        InvertedListScanner *scanner = get_InvertedListScanner(store_pairs);
+        ScopeDeleter1<InvertedListScanner> del(scanner);
+
+        /*****************************************************
+         * Depending on parallel_mode, there are two possible ways
+         * to organize the search. Here we define local functions
+         * that are in common between the two
+         ******************************************************/
+
+        // intialize + reorder a result heap
+
+        auto init_result = [&](float *simi, idx_t *idxi) {
+            if (metric_type == METRIC_INNER_PRODUCT) {
+                heap_heapify<HeapForIP> (k, simi, idxi);
+            } else {
+                heap_heapify<HeapForL2> (k, simi, idxi);
+            }
+        };
+
+        auto reorder_result = [&] (float *simi, idx_t *idxi) {
+            if (metric_type == METRIC_INNER_PRODUCT) {
+                heap_reorder<HeapForIP> (k, simi, idxi);
+            } else {
+                heap_reorder<HeapForL2> (k, simi, idxi);
+            }
+        };
+
+        // single list scan using the current scanner (with query
+        // set porperly) and storing results in simi and idxi
+        auto scan_one_list = [&] (idx_t key, float coarse_dis_i, //const idx_t* indexes,
+                                  const idx_t* indexes_list_no, const idx_t* indexes_offset,  idx_t n_indexes,
+                                  float *simi, idx_t *idxi) {
+
+            if (key < 0) {
+                // not enough centroids for multiprobe
+                return (size_t)0;
+            }
+            FAISS_THROW_IF_NOT_FMT (key < (idx_t) nlist,
+                                    "Invalid key=%ld nlist=%ld\n",
+                                    key, nlist);
+
+            size_t list_size = invlists->list_size(key);
+
+            // don't waste time on empty lists
+            if (list_size == 0) {
+                return (size_t)0;
+            }
+
+            scanner->set_list (key, coarse_dis_i);
+
+            nlistv++;
+
+            InvertedLists::ScopedCodes scodes (invlists, key);
+
+            std::unique_ptr<InvertedLists::ScopedIds> sids;
+            const Index::idx_t * ids = nullptr;
+
+            if (!store_pairs)  {
+                sids.reset (new InvertedLists::ScopedIds (invlists, key));
+                ids = sids->get();
+            }
+
+            nheap += scanner->scan_codes_subset (list_size, scodes.get(),
+                                          ids, simi, idxi, k, indexes_list_no, indexes_offset, n_indexes);
+
+            return list_size;
+        };
+
+        /****************************************************
+         * Actual loops, depending on parallel_mode
+         ****************************************************/
+
+        if (parallel_mode == 0) {
+
+#pragma omp for
+            for (size_t i = 0; i < n; i++) {
+
+                if (interrupt) {
+                    continue;
+                }
+
+                idx_t n_indexes_offset = 0;
+                for (size_t j = 0; j < i; j++) {
+                    n_indexes_offset += n_indexes[j];
+                }
+
+                // loop over queries
+                scanner->set_query (x + i * d);
+                float * simi = distances + i * k;
+                idx_t * idxi = labels + i * k;
+
+                init_result (simi, idxi);
+
+                long nscan = 0;
+
+                // loop over probes
+                for (size_t ik = 0; ik < nprobe; ik++) {
+
+                    nscan += scan_one_list (
+                         keys [i * nprobe + ik],
+                         coarse_dis[i * nprobe + ik],                         //  indexes + n_indexes_offset,
+                         indexes_list_no.get() + n_indexes_offset,
+                         indexes_offset.get() + n_indexes_offset,
+                         n_indexes[i],
+                         simi, idxi
+                    );
+
+                    if (max_codes && nscan >= max_codes) {
+                        break;
+                    }
+                }
+
+
+                ndis += nscan;
+                reorder_result (simi, idxi);
+
+                if (InterruptCallback::is_interrupted ()) {
+                    interrupt = true;
+                }
+
+            } // parallel for
+        } else {
+            FAISS_THROW_FMT ("parallel_mode %d not supported\n",
+                             parallel_mode);
+        }
+    } // parallel section
+
+    if (interrupt) {
+        FAISS_THROW_MSG ("computation interrupted");
+    }
+
+    indexIVF_stats.nq += n;
+    indexIVF_stats.nlist += nlistv;
+    indexIVF_stats.ndis += ndis;
+    indexIVF_stats.nheap_updates += nheap;
+
+}
+
+
 void IndexIVF::search (idx_t n, const float *x, idx_t k,
                          float *distances, idx_t *labels) const
 {
@@ -839,6 +1028,16 @@ void InvertedListScanner::scan_codes_range (size_t ,
                        RangeQueryResult &) const
 {
     FAISS_THROW_MSG ("scan_codes_range not implemented");
+}
+
+size_t InvertedListScanner::scan_codes_subset (size_t list_size,
+                    const uint8_t *codes,
+                    const idx_t *ids,
+                    float *simi, idx_t *idxi,
+                    size_t k,
+                    const idx_t* indexes_list_no, const idx_t* indexes_offset,  idx_t n_indexes) const
+{
+    FAISS_THROW_MSG("scan_codes_subset not supported for this scanner");
 }
 
 

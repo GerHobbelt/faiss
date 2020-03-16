@@ -173,6 +173,17 @@ struct IndexIVF: Index, Level1Quantizer {
     void search (idx_t n, const float *x, idx_t k,
                  float *distances, idx_t *labels) const override;
 
+    void search_subset (idx_t n, const float *x, idx_t k, const idx_t* indexes, const idx_t* n_indexes,
+                         float *distances, idx_t *labels) const override;
+
+    void search_subset_preassigned (idx_t n, const float *x, idx_t k, const idx_t* indexes, const idx_t* n_indexes,
+                                   const idx_t *keys,
+                                   const float *coarse_dis ,
+                                   float *distances, idx_t *labels,
+                                   bool store_pairs,
+                                   const IVFSearchParameters *params=nullptr) const;
+
+
     void range_search (idx_t n, const float* x, float radius,
                        RangeSearchResult* result) const override;
 
@@ -298,6 +309,12 @@ struct InvertedListScanner {
                                const idx_t *ids,
                                float *distances, idx_t *labels,
                                size_t k) const = 0;
+
+    virtual size_t scan_codes_subset (size_t n,
+                               const uint8_t *codes,
+                               const idx_t *ids,
+                               float *distances, idx_t *labels,
+                               size_t k, const idx_t* indexes_list_no, const idx_t* indexes_offset,  idx_t n_indexes) const;
 
     /** scan a set of codes, compute distances to current query and
      * update results if distances are below radius

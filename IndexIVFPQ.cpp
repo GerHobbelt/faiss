@@ -1062,6 +1062,50 @@ struct IVFPQScanner:
         return res.nup;
     }
 
+    size_t scan_codes_subset (size_t list_size,
+                       const uint8_t *codes,
+                       const idx_t *ids,
+                       float *simi, idx_t *idxi,
+                       size_t k,
+                       const idx_t* indexes_list_no, const idx_t* indexes_offset,  idx_t n_indexes) const override
+    {
+        if (this->polysemous_ht > 0) {
+            assert(precompute_mode == 2);
+            FAISS_THROW_MSG("unsupported precompute mode");
+        } else if (precompute_mode == 2) {
+
+            size_t nup = 0;
+            for (size_t j = 0; j < n_indexes; j++) {
+                if (indexes_list_no[j] == this->key){
+                    float dis = this->dis0;
+                    const float *tab = this->sim_table;
+                    const uint8_t *code = codes + indexes_offset[j] * this->pq.code_size;
+
+                    for (size_t m = 0; m < this->pq.M; m++) {
+                        dis += tab[*code++];
+                        tab += this->pq.ksub;
+                    }
+
+                    if (dis < simi [0]) {
+                        maxheap_pop (k, simi, idxi);
+                        int64_t id = store_pairs ? (this->key << 32 | indexes_offset[j]) : ids[indexes_offset[j]];
+                        maxheap_push (k, simi, idxi, dis, id);
+                        nup++;
+                    }
+                }
+            }
+            return nup;
+
+        } else if (precompute_mode == 1) {
+            FAISS_THROW_MSG("unsupported precompute mode");
+        } else if (precompute_mode == 0) {
+            FAISS_THROW_MSG("unsupported precompute mode");
+        } else {
+            FAISS_THROW_MSG("bad precomp mode");
+        }
+    }
+
+
     void scan_codes_range (size_t ncode,
                            const uint8_t *codes,
                            const idx_t *ids,

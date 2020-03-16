@@ -133,6 +133,9 @@ struct Index {
     virtual void search (idx_t n, const float *x, idx_t k,
                          float *distances, idx_t *labels) const = 0;
 
+    virtual void search_subset (idx_t n, const float *x, idx_t k, const idx_t* indexes, const idx_t* n_indexes,
+                         float *distances, idx_t *labels) const;
+
     /** query n vectors of dimension d to the index.
      *
      * return all vectors with distance < radius. Note that many

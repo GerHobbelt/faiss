@@ -96,6 +96,11 @@ void Index::display () const {
   printf ("Index: %s  -> %ld elements\n", typeid (*this).name(), ntotal);
 }
 
+void Index::search_subset (idx_t n, const float *x, idx_t k, const idx_t* indexes, const idx_t* n_indexes,
+                    float *distances, idx_t *labels) const {
+    FAISS_THROW_MSG("search_subset not supported for this index");
+}
+
 
 namespace {
 

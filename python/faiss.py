@@ -121,6 +121,20 @@ def handle_Index(the_class):
                       swig_ptr(labels))
         return distances, labels
 
+    def replacement_search_subset(self, x, indexes, k):
+        n, d = x.shape
+        assert d == self.d
+        n_indexes = np.array([len(item) for item in indexes])
+        indexes = np.concatenate(indexes)
+        distances = np.empty((n, k), dtype=np.float32)
+        labels = np.empty((n, k), dtype=np.int64)
+        self.search_subset_c(n, swig_ptr(x),
+                      k, 
+                      swig_ptr(indexes), swig_ptr(n_indexes), 
+                      swig_ptr(distances),
+                      swig_ptr(labels))
+        return distances, labels
+
     def replacement_search_and_reconstruct(self, x, k):
         n, d = x.shape
         assert d == self.d
@@ -174,6 +188,7 @@ def handle_Index(the_class):
     replace_method(the_class, 'assign', replacement_assign)
     replace_method(the_class, 'train', replacement_train)
     replace_method(the_class, 'search', replacement_search)
+    replace_method(the_class, 'search_subset', replacement_search_subset)
     replace_method(the_class, 'remove_ids', replacement_remove_ids)
     replace_method(the_class, 'reconstruct', replacement_reconstruct)
     replace_method(the_class, 'reconstruct_n', replacement_reconstruct_n)

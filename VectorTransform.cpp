@@ -1021,6 +1021,15 @@ void IndexPreTransform::search (idx_t n, const float *x, idx_t k,
     index->search (n, xt, k, distances, labels);
 }
 
+void IndexPreTransform::search_subset (idx_t n, const float *x, idx_t k, const idx_t* indexes, const idx_t* n_indexes,
+                    float *distances, idx_t *labels) const 
+{
+    FAISS_THROW_IF_NOT (is_trained);
+    const float *xt = apply_chain (n, x);
+    ScopeDeleter<float> del(xt == x ? nullptr : xt);
+    index->search_subset (n, xt, k, indexes, n_indexes, distances, labels);
+}
+
 void IndexPreTransform::range_search (idx_t n, const float* x, float radius,
                                       RangeSearchResult* result) const
 {
