@@ -563,6 +563,62 @@ void ParameterSpace::set_index_parameter(
             name.c_str());
 }
 
+double ParameterSpace::get_index_parameter(
+        Index* index,
+        const std::string& name) const {
+    if (verbose > 1) {
+        printf("    get_index_parameter %s\n", name.c_str());
+    }
+
+    if (DC(IndexIDMap)) {
+        return get_index_parameter(ix->index, name);
+    }
+    if (DC(IndexPreTransform)) {
+        return get_index_parameter(ix->index, name);
+    }
+    if (DC(IndexRefine)) {
+        if (name == "k_factor_rf") {
+            return double(ix->k_factor);
+        }
+        // otherwise it is for the sub-index
+        return get_index_parameter(ix->base_index, name);
+    }
+
+    if (name == "nprobe") {
+        if (DC(IndexIVF)) {
+            return double(ix->nprobe);
+        }
+    }
+
+    if (name == "k_factor") {
+        if (DC(IndexIVFPQR)) {
+            return double(ix->k_factor);
+        }
+    }
+    if (name == "max_codes") {
+        if (DC(IndexIVF)) {
+            return double(ix->max_codes);
+        }
+    }
+
+    if (name == "efConstruction") {
+        if (DC(IndexHNSW)) {
+            return double(ix->hnsw.efConstruction);
+        }
+    }
+
+    if (name == "efSearch") {
+        if (DC(IndexHNSW)) {
+            return double(ix->hnsw.efSearch);
+        }
+    }
+
+    FAISS_THROW_FMT(
+            "ParameterSpace::get_index_parameter:"
+            "could not get parameter %s",
+            name.c_str());
+}
+
 void ParameterSpace::display() const {
     printf("ParameterSpace, %zd parameters, %zd combinations:\n",
            parameter_ranges.size(),

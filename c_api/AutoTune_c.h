@@ -67,6 +67,13 @@ int faiss_ParameterSpace_set_index_parameter(
         const char*,
         double);
 
+/// get one of the parameters
+int faiss_ParameterSpace_get_index_parameter(
+        const FaissParameterSpace*,
+        FaissIndex*,
+        const char*,
+        double*);
+
 /// print a description on stdout
 void faiss_ParameterSpace_display(const FaissParameterSpace*);
 
