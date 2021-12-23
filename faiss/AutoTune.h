@@ -185,6 +185,9 @@ struct ParameterSpace {
             const std::string& name,
             double val) const;
 
+    /// get one of the parameters
+    double get_index_parameter(Index* index, const std::string& name) const;
+
     /** find an upper bound on the performance and a lower bound on t
      * for configuration cno given another operating point op */
     void update_bounds(

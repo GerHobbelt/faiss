@@ -95,6 +95,19 @@ int faiss_ParameterSpace_set_index_parameter(
     CATCH_AND_HANDLE
 }
 
+int faiss_ParameterSpace_get_index_parameter(
+        const FaissParameterSpace* space,
+        FaissIndex* cindex,
+        const char* name,
+        double* value) {
+    try {
+        auto index = reinterpret_cast<Index*>(cindex);
+        *value = reinterpret_cast<const ParameterSpace*>(space)
+                         ->get_index_parameter(index, name);
+    }
+    CATCH_AND_HANDLE
+}
+
 void faiss_ParameterSpace_display(const FaissParameterSpace* space) {
     reinterpret_cast<const ParameterSpace*>(space)->display();
 }
