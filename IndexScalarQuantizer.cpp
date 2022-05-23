@@ -1389,6 +1389,29 @@ struct IVFSQScannerIP: InvertedListScanner {
         return nup;
     }
 
+    size_t scan_codes_subset (size_t list_size,
+                       const uint8_t *codes,
+                       const idx_t *ids,
+                       float *simi, idx_t *idxi,
+                       size_t k,
+                       const idx_t* indexes_list_no, const idx_t* indexes_offset,  idx_t n_indexes) const override
+    {
+        size_t nup = 0;
+        for (size_t j = 0; j < n_indexes; j++) {
+            if (indexes_list_no[j] == this->list_no){
+                float accu =  accu0 + dc.query_to_code (codes + indexes_offset[j] * code_size);
+
+                if (accu > simi [0]) {
+                    minheap_pop (k, simi, idxi);
+                    int64_t id = store_pairs ? (list_no << 32 | indexes_offset[j]) : ids[indexes_offset[j]];
+                    minheap_push (k, simi, idxi, accu, id);
+                    nup++;
+                }
+            }
+        }
+        return nup;
+    }
+
     void scan_codes_range (size_t list_size,
                            const uint8_t *codes,
                            const idx_t *ids,
