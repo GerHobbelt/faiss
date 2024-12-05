@@ -8,6 +8,7 @@
     <innerdir refid="dir_a990053ab0ed2a0e35fd7924fe582c4e">faiss/utils/hamming_distance</innerdir>
     <innerdir refid="dir_6db856fab8a406bb2751df9e12e5655b">faiss/utils/transpose</innerdir>
     <innerfile refid="AlignedTable_8h">AlignedTable.h</innerfile>
+    <innerfile refid="bf16_8h">bf16.h</innerfile>
     <innerfile refid="distances_8h">distances.h</innerfile>
     <innerfile refid="extra__distances-inl_8h">extra_distances-inl.h</innerfile>
     <innerfile refid="extra__distances_8h">extra_distances.h</innerfile>
@@ -18,6 +19,7 @@
     <innerfile refid="hamming-inl_8h">hamming-inl.h</innerfile>
     <innerfile refid="hamming_8h">hamming.h</innerfile>
     <innerfile refid="Heap_8h">Heap.h</innerfile>
+    <innerfile refid="NeuralNet_8h">NeuralNet.h</innerfile>
     <innerfile refid="ordered__key__value_8h">ordered_key_value.h</innerfile>
     <innerfile refid="partitioning_8h">partitioning.h</innerfile>
     <innerfile refid="prefetch_8h">prefetch.h</innerfile>
