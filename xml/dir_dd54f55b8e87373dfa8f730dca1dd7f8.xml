@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
   <compounddef id="dir_dd54f55b8e87373dfa8f730dca1dd7f8" kind="dir">
     <compoundname>faiss/impl</compoundname>
     <innerdir refid="dir_df06d869ac375e073b830f0b1d0f2164">faiss/impl/code_distance</innerdir>
@@ -18,6 +18,8 @@
     <innerfile refid="lattice__Zn_8h">lattice_Zn.h</innerfile>
     <innerfile refid="LocalSearchQuantizer_8h">LocalSearchQuantizer.h</innerfile>
     <innerfile refid="LookupTableScaler_8h">LookupTableScaler.h</innerfile>
+    <innerfile refid="mapped__io_8h">mapped_io.h</innerfile>
+    <innerfile refid="maybe__owned__vector_8h">maybe_owned_vector.h</innerfile>
     <innerfile refid="NNDescent_8h">NNDescent.h</innerfile>
     <innerfile refid="NSG_8h">NSG.h</innerfile>
     <innerfile refid="platform__macros_8h">platform_macros.h</innerfile>
@@ -27,6 +29,7 @@
     <innerfile refid="ProductQuantizer-inl_8h">ProductQuantizer-inl.h</innerfile>
     <innerfile refid="ProductQuantizer_8h">ProductQuantizer.h</innerfile>
     <innerfile refid="Quantizer_8h">Quantizer.h</innerfile>
+    <innerfile refid="RaBitQuantizer_8h">RaBitQuantizer.h</innerfile>
     <innerfile refid="residual__quantizer__encode__steps_8h">residual_quantizer_encode_steps.h</innerfile>
     <innerfile refid="ResidualQuantizer_8h">ResidualQuantizer.h</innerfile>
     <innerfile refid="ResultHandler_8h">ResultHandler.h</innerfile>
@@ -34,6 +37,7 @@
     <innerfile refid="simd__result__handlers_8h">simd_result_handlers.h</innerfile>
     <innerfile refid="ThreadedIndex-inl_8h">ThreadedIndex-inl.h</innerfile>
     <innerfile refid="ThreadedIndex_8h">ThreadedIndex.h</innerfile>
+    <innerfile refid="zerocopy__io_8h">zerocopy_io.h</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
