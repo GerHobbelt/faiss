@@ -7,6 +7,7 @@
     <includes refid="MetricType_8h" local="no">faiss/MetricType.h</includes>
     <includedby refid="IndexIDMap_8h" local="no">faiss/IndexIDMap.h</includedby>
     <includedby refid="IndexIVF_8h" local="no">faiss/IndexIVF.h</includedby>
+    <includedby refid="CuvsFilterConvert_8h" local="no">faiss/gpu/utils/CuvsFilterConvert.h</includedby>
     <includedby refid="ResultHandler_8h" local="no">faiss/impl/ResultHandler.h</includedby>
     <includedby refid="simd__result__handlers_8h" local="no">faiss/impl/simd_result_handlers.h</includedby>
     <includedby refid="python__callbacks_8h" local="no">faiss/python/python_callbacks.h</includedby>
@@ -16,6 +17,8 @@
         <label>faiss/MetricType.h</label>
         <link refid="MetricType_8h_source"/>
         <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
         </childnode>
       </node>
       <node id="1">
@@ -29,17 +32,9 @@
         </childnode>
       </node>
       <node id="5">
-        <label>faiss/impl/platform_macros.h</label>
-        <link refid="platform__macros_8h_source"/>
-        <childnode refid="6" relation="include">
-        </childnode>
-        <childnode refid="7" relation="include">
-        </childnode>
-      </node>
-      <node id="6">
         <label>cstdint</label>
       </node>
-      <node id="7">
+      <node id="6">
         <label>cstdio</label>
       </node>
       <node id="2">
@@ -105,11 +100,11 @@
         </childnode>
         <childnode refid="24" relation="include">
         </childnode>
-        <childnode refid="25" relation="include">
-        </childnode>
-        <childnode refid="28" relation="include">
+        <childnode refid="26" relation="include">
         </childnode>
         <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
         </childnode>
       </node>
       <node id="9">
@@ -184,25 +179,31 @@
         <label>faiss/MetaIndexes.h</label>
         <link refid="MetaIndexes_8h_source"/>
       </node>
+      <node id="25">
+        <label>faiss/gpu/GpuIndexBinaryCagra.h</label>
+        <link refid="GpuIndexBinaryCagra_8h_source"/>
+      </node>
       <node id="24">
         <label>faiss/gpu/GpuIndexCagra.h</label>
         <link refid="GpuIndexCagra_8h_source"/>
+        <childnode refid="25" relation="include">
+        </childnode>
       </node>
-      <node id="25">
+      <node id="26">
         <label>faiss/gpu/GpuIndexIVF.h</label>
         <link refid="GpuIndexIVF_8h_source"/>
-        <childnode refid="26" relation="include">
-        </childnode>
         <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
         </childnode>
         <childnode refid="22" relation="include">
         </childnode>
       </node>
-      <node id="26">
+      <node id="27">
         <label>faiss/gpu/GpuIndexIVFFlat.h</label>
         <link refid="GpuIndexIVFFlat_8h_source"/>
       </node>
-      <node id="27">
+      <node id="28">
         <label>faiss/gpu/GpuIndexIVFPQ.h</label>
         <link refid="GpuIndexIVFPQ_8h_source"/>
         <childnode refid="24" relation="include">
@@ -212,6 +213,10 @@
         <label>faiss/gpu/GpuIndexIVFScalarQuantizer.h</label>
         <link refid="GpuIndexIVFScalarQuantizer_8h_source"/>
       </node>
+      <node id="31">
+        <label>faiss/gpu/utils/CuvsFilterConvert.h</label>
+        <link refid="CuvsFilterConvert_8h_source"/>
+      </node>
       <node id="1">
         <label>faiss/impl/IDSelector.h</label>
         <link refid="IDSelector_8h"/>
@@ -219,36 +224,38 @@
         </childnode>
         <childnode refid="4" relation="include">
         </childnode>
-        <childnode refid="30" relation="include">
-        </childnode>
-        <childnode refid="31" relation="include">
-        </childnode>
-        <childnode refid="6" relation="include">
-        </childnode>
-        <childnode refid="35" relation="include">
-        </childnode>
-      </node>
-      <node id="30">
-        <label>faiss/impl/ResultHandler.h</label>
-        <link refid="ResultHandler_8h_source"/>
         <childnode refid="31" relation="include">
         </childnode>
         <childnode refid="32" relation="include">
         </childnode>
         <childnode refid="33" relation="include">
         </childnode>
-        <childnode refid="34" relation="include">
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
         </childnode>
       </node>
-      <node id="28">
+      <node id="32">
+        <label>faiss/impl/ResultHandler.h</label>
+        <link refid="ResultHandler_8h_source"/>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
         <label>faiss/impl/index_read_utils.h</label>
         <link refid="index__read__utils_8h_source"/>
       </node>
-      <node id="31">
+      <node id="33">
         <label>faiss/impl/simd_result_handlers.h</label>
         <link refid="simd__result__handlers_8h_source"/>
       </node>
-      <node id="29">
+      <node id="30">
         <label>faiss/invlists/OnDiskInvertedLists.h</label>
         <link refid="OnDiskInvertedLists_8h_source"/>
       </node>
@@ -256,19 +263,19 @@
         <label>faiss/python/python_callbacks.h</label>
         <link refid="python__callbacks_8h_source"/>
       </node>
-      <node id="32">
+      <node id="34">
         <label>faiss/utils/distances_fused/avx512.h</label>
         <link refid="avx512_8h_source"/>
       </node>
-      <node id="33">
+      <node id="35">
         <label>faiss/utils/distances_fused/distances_fused.h</label>
         <link refid="distances__fused_8h_source"/>
       </node>
-      <node id="34">
+      <node id="36">
         <label>faiss/utils/distances_fused/simdlib_based.h</label>
         <link refid="simdlib__based_8h_source"/>
       </node>
-      <node id="35">
+      <node id="37">
         <label>faiss/utils/hamming.h</label>
         <link refid="hamming_8h_source"/>
       </node>
@@ -407,7 +414,7 @@
 <codeline lineno="116"><highlight class="comment">/**<sp/>reverts<sp/>the<sp/>membership<sp/>test<sp/>of<sp/>another<sp/>selector<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="117" refid="structfaiss_1_1IDSelectorNot" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structfaiss_1_1IDSelectorNot" kindref="compound">IDSelectorNot</ref><sp/>:<sp/><ref refid="structfaiss_1_1IDSelector" kindref="compound">IDSelector</ref><sp/>{</highlight></codeline>
 <codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structfaiss_1_1IDSelector" kindref="compound">IDSelector</ref>*<sp/>sel;</highlight></codeline>
-<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structfaiss_1_1IDSelectorNot" kindref="compound">IDSelectorNot</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structfaiss_1_1IDSelector" kindref="compound">IDSelector</ref>*<sp/>sel)<sp/>:<sp/>sel(sel)<sp/>{}</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal"><sp/><ref refid="structfaiss_1_1IDSelectorNot" kindref="compound">IDSelectorNot</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structfaiss_1_1IDSelector" kindref="compound">IDSelector</ref>*<sp/>sel)<sp/>:<sp/>sel(sel)<sp/>{}</highlight></codeline>
 <codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_member(<ref refid="namespacefaiss_1ad63e84aa82f5bb0405ed924d58b20e2e" kindref="member">idx_t</ref><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">final</highlight><highlight class="normal"><sp/>{</highlight></codeline>
 <codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!sel-&gt;is_member(</highlight><highlight class="keywordtype">id</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
