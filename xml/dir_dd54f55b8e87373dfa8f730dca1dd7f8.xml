@@ -6,6 +6,7 @@
     <innerdir refid="dir_d9c18ecf33bce9e28b450a61753b43c1">faiss/impl/binary_hamming</innerdir>
     <innerdir refid="dir_f89009322cf84aa5fe47ed2291928d28">faiss/impl/fast_scan</innerdir>
     <innerdir refid="dir_4e2b565c8f87998af389640213d7d37b">faiss/impl/hnsw</innerdir>
+    <innerdir refid="dir_3001c1960c00b8a2f244288c46a9cf08">faiss/impl/pipnn</innerdir>
     <innerdir refid="dir_91b27e9ef764347773ffca62779352cf">faiss/impl/polysemous_training</innerdir>
     <innerdir refid="dir_c049bba3e09b3fcad22939d16e82a552">faiss/impl/pq_code_distance</innerdir>
     <innerdir refid="dir_49d07059965bd48f84542aba965b16d6">faiss/impl/scalar_quantizer</innerdir>
@@ -52,6 +53,7 @@
     <innerfile refid="ResultHandler_8h">ResultHandler.h</innerfile>
     <innerfile refid="ScalarQuantizer_8h">ScalarQuantizer.h</innerfile>
     <innerfile refid="simd__dispatch_8h">simd_dispatch.h</innerfile>
+    <innerfile refid="sq__fastscan__utils_8h">sq_fastscan_utils.h</innerfile>
     <innerfile refid="svs__io_8h">svs_io.h</innerfile>
     <innerfile refid="ThreadedIndex-inl_8h">ThreadedIndex-inl.h</innerfile>
     <innerfile refid="ThreadedIndex_8h">ThreadedIndex.h</innerfile>
